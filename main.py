@@ -6,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup as soup
 import time
 from lxml import html #to parse html
+from secretDirectory import secret
 
 #username is name in url
 def getFriendsLikes(uname, email, passw, numFriendsToScrape):
@@ -45,7 +46,7 @@ def getFriendsLikes(uname, email, passw, numFriendsToScrape):
     FULLHTMLPAGE = driver.page_source
 
     #will parse the HTML page to obtain hrefs of friends.
-    hrefs = parseHTML(FULLHTMLPAGE, "friendsurls")
+    hrefs = parseHTML(FULLHTMLPAGE, "friendsurls", 1)
     #will parse hrefs, take only friends' pages and append all_likes to them so we can access their likes.
     friendURLS = parseURLS(hrefs)
 
@@ -57,7 +58,7 @@ def getFriendsLikes(uname, email, passw, numFriendsToScrape):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(2)
         likesPage = driver.page_source
-        parseHTML(likesPage, "friendslikes")
+        parseHTML(likesPage, "friendslikes", 1)
     else:
         i = 0
         while(i < numFriendsToScrape and i < len(friendURLS)):
@@ -109,7 +110,7 @@ def parseHTML(HTMLPAGE, typeOfPage: str, friendNumber: int):
         # save the page to local storage for local parsing
         with open(f"friendLikesPage{friendNumber}.html", "w", encoding='utf-8') as file:
             file.write(str(containers))
-        tree = html.parse("friendLikesPage.html")
+        tree = html.parse(f"friendLikesPage{friendNumber}.html")
         html.tostring(tree)
         hrefs = tree.xpath('//@href')
     else:
@@ -144,9 +145,9 @@ def parseURLS(lst: list) -> list:
 
 if __name__ == '__main__':
 
-    email = "email"
-    uname = "ashraf.tayfour"
-    passw = "pass"
+    email = secret.EMAIL
+    uname = secret.UNAME
+    passw = secret.passw
     numOfFriendsToScrape = 1
 
     # gets friendsList page
@@ -156,6 +157,7 @@ if __name__ == '__main__':
     #
     # with TorBrowserDriver("/path/to/TorBrowserBundle/") as driver:
     #     driver.get('https://check.torproject.org')
+    #https://manivannan-ai.medium.com/selenium-with-tor-browser-using-python-7b3606b8c55c
 
 
 
