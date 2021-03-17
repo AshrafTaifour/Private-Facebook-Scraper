@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -13,15 +12,21 @@ from tbselenium.tbdriver import TorBrowserDriver
 
 
 def getFriendsLikes(uname, email, passw, numFriendsToScrape, path):
-    # will turn off notification for FB to allow webscraping
-    # for windows
-    #chrome_options = webdriver.ChromeOptions()
-    #prefs = {"profile.default_content_setting_values.notifications": 2}
-    #chrome_options.add_experimental_option("prefs", prefs)
+    # will turn off notification for FB to allow webscraping for windows
+    chrome_options = webdriver.ChromeOptions()
+    prefs = {"profile.default_content_setting_values.notifications": 2}
+    chrome_options.add_experimental_option("prefs", prefs)
 
-    # driver = webdriver.Chrome(path, options=chrome_options)
+    if('chrome' in path):
+        driver = webdriver.Chrome(path, options=chrome_options)
+    elif('tor' in path):
     # for linux, uses tor browser.
-    #driver = TorBrowserDriver(path)
+        driver = TorBrowserDriver(path)
+    else:
+        print(f"'tor' or 'chrome' are not in your path's name, please change the name of your chrome driver to include the word chrome in it or the tor directory to include the word tor.")
+        return
+
+
     driver.get("http://www.facebook.com")
 
     # will open the webpage
@@ -150,13 +155,8 @@ if __name__ == '__main__':
     uname = secret.UNAME
     passw = secret.passw
     numOfFriendsToScrape = 1
-    windowsPath = 'C:/Users/Ashraf/chromedriver.exe'
-    linuxPath = "/home/ashraft/Downloads/tor-browser_en-US/
+    windowsPath = secret.windowsPath
+    linuxPath = secret.linuxPath
     # gets friendsList page
     getFriendsLikes(uname, email, passw, numOfFriendsToScrape, windowsPath)
 
-    # from tbselenium.tbdriver import TorBrowserDriver
-    #
-    # with TorBrowserDriver("/path/to/TorBrowserBundle/") as driver:
-    #     driver.get('https://check.torproject.org')
-    # https://manivannan-ai.medium.com/selenium-with-tor-browser-using-python-7b3606b8c55c

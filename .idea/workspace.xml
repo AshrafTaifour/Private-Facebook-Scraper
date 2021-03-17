@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="63110b7b-a9c0-4c62-a3de-71435e653233" name="Default Changelist" comment="">
+    <list default="true" id="63110b7b-a9c0-4c62-a3de-71435e653233" name="Default Changelist" comment="added control flow to path,">
+      <change afterPath="$PROJECT_DIR$/test_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fbLogin.py.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fbLogin.py.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -14,6 +17,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -108,15 +112,28 @@
       <workItem from="1615826464873" duration="595000" />
       <workItem from="1615827835983" duration="35000" />
       <workItem from="1615842306825" duration="107000" />
-      <workItem from="1615843334405" duration="1977000" />
+      <workItem from="1615843334405" duration="2501000" />
+      <workItem from="1615990240475" duration="2524000" />
     </task>
+    <task id="LOCAL-00001" summary="fixed bug with parseHTML">
+      <created>1615847393368</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1615847393368</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fixed bug with parseHTML" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bug with parseHTML" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/fbLoginAndScrape$main.coverage" NAME="main Coverage Results" MODIFIED="1615846526910" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/fbLoginAndScrape$main.coverage" NAME="main Coverage Results" MODIFIED="1615847321974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/fbLogin_py$main.coverage" NAME="main Coverage Results" MODIFIED="1615774866961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
