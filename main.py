@@ -88,30 +88,21 @@ def getFriendsLikes(uname, email, passw, numFriendsToScrape, path):
             parseHTML(likesPage, "friendslikes", i)
             i += 1
 
-    # go through all friends' likes pages and obtain a list of things they like
-    # seems like class: kvgmc6g5 is used for the description of the like and the like itself has span class: d2edcug0 for key, div class kvgmc6g5 for
-    # NOTE: this must be in the same scope since we need to be logged in to do this activity.
-    # for friendPage in friendURLs:
-    #     driver.get(friendPage) #go to friend's likes page
-    #     #scroll to get all entries
-    #     for j in range(0, 10):
-    #         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    #         time.sleep(3)
-    #     likesPage = driver.page_source
-
 
 # will parse pagesource and return a list of HREFs, parses through friends list page and a friend's likes page
 def parseHTML(HTMLPAGE, typeOfPage: str, friendNumber: int):
     # use beautifulsoup to parse HTML
     page_soup = soup(HTMLPAGE, "html.parser")
+    hrefs = None
 
-    # obtain your friends' URLs
+    # obtain your friends' URLs from the full source page HTML
     if(typeOfPage == "friendsurls"):
         # oajrlxb2 class contains many URLS that will be useful for finding friends' page URLs
         containers = page_soup.findAll("a", {"class": "oajrlxb2"})
         # save the page to local storage for local parsing
         with open("friendListPage.html", "w", encoding='utf-8') as file:
             file.write(str(containers))
+        #lxml.html requires an actual html page to be passed so saving locally is required.
         tree = html.parse("friendListPage.html")
         html.tostring(tree)
         hrefs = tree.xpath('//@href')
@@ -123,9 +114,7 @@ def parseHTML(HTMLPAGE, typeOfPage: str, friendNumber: int):
         # save the page to local storage for local parsing
         with open(f"friendLikesPage{friendNumber}.html", "w", encoding='utf-8') as file:
             file.write(str(containers))
-        tree = html.parse(f"friendLikesPage{friendNumber}.html")
-        html.tostring(tree)
-        hrefs = tree.xpath('//@href')
+
     else:
         print("INVALID INPUT")
 
@@ -136,17 +125,16 @@ def parseHTML(HTMLPAGE, typeOfPage: str, friendNumber: int):
 def parseURLS(lst: list) -> list:
     newLst = []
     for link in lst:
+        #links that contain 'friends_mutual' in it include your friend's URLs, this is a good way to only select for friendsURLs...
+        #and discard any extra URLs.
         if"friends_mutual" in link:
             size = len(link)
             modString = link[:size - 14]
             modString += "likes_all"
             newLst.append(modString)
-    # for i in range (0, len(lst), 2):
-    #    newLst.append(lst[i])
 
     return newLst
 
-# def parseLikesPage(page ):
 
 
 if __name__ == '__main__':

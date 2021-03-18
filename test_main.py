@@ -1,5 +1,5 @@
 import time
-
+import codecs
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -10,6 +10,7 @@ from unittest import TestCase
 from tbselenium.tbdriver import TorBrowserDriver
 #import our file that has user login and the path to the tor and chrome drivers
 from secretDirectory import secret
+from main import parseHTML, parseURLS
 
 class Test(TestCase):
     #uncomment this test if on Windows
@@ -62,5 +63,23 @@ class Test(TestCase):
     #     # assert if you're now on the homepage or if an 'incorrect password' error was thrown which would have a different URL
     #     assert (driver.current_url == 'https://www.facebook.com/')
 
-    def test_parse_html(self):
-        self.assertTrue(1 == 1)
+
+    #please setup secret.testFriendsURLsPage to a the downloaded HTML source of your own "friends list" page that shows all your friends on Facebook
+    #here we are testing ParseHTMLs ability to parse full source HTML page and it returning hrefs that can be used to find friendsURLs
+    def test_parse_html_friendsURLs(self, type_of_page="friendsurls", friendNumber=None):
+        #TODO: find a way to read an HTML file that can be passed to the parseHTML function.
+        #TODO: parseHTML function accepted driver.page_source from selenium so it has to be in a similar format to that.
+        #TODO: currently broken
+        with codecs.open("testURLsPage.html", "r", 'utf-8') as friendsURLsPage:
+            pass
+        print(friendsURLsPage)
+        result = True
+        allHrefs = parseHTML(friendsURLsPage, type_of_page, friendNumber)
+        for link in allHrefs:
+            print(link)
+            if 'https://www.facebook.com/' not in link:
+                result = False
+
+        assert(result)
+
+
