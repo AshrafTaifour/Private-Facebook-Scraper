@@ -7,6 +7,7 @@ import time
 from lxml import html  # to parse html
 from secretDirectory import secret
 from tbselenium.tbdriver import TorBrowserDriver
+import os
 
 #username is name in url
 
@@ -17,17 +18,19 @@ def getFriendsLikes(uname, email, passw, numFriendsToScrape, path):
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
 
+    # store original path of the directory (tor is changing the path when executing)
+    originalPath = os.getcwd()
+
     if('chrome' in path):
         driver = webdriver.Chrome(path, options=chrome_options)
+        driver.get("http://www.facebook.com")
     elif('tor' in path):
-    # for linux, uses tor browser.
+        # for linux, uses tor browser.
         driver = TorBrowserDriver(path)
+        driver.get("https://www.facebookcorewwwi.onion/")
     else:
         print(f"'tor' or 'chrome' are not in your path's name, please change the name of your chrome driver to include the word chrome in it or the tor directory to include the word tor.")
         return
-
-
-    driver.get("http://www.facebook.com")
 
     # will open the webpage
 
@@ -47,8 +50,16 @@ def getFriendsLikes(uname, email, passw, numFriendsToScrape, path):
     button = WebDriverWait(driver, 2).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
     #
-    time.sleep(5)
-    driver.get(f"https://www.facebook.com/{uname}/friends_all")
+    time.sleep(8)
+    #facebookURL = driver.current_url
+
+    # if account has no real username
+    if 'profile.php?' in uname:
+        print('************************************************************')
+        driver.get(f'https://www.facebookcorewwwi.onion/{uname}&sk=friends')
+        print('**************************************************************')
+    else:
+        driver.get(f"https://www.facebook.com/{uname}/friends_all")
 
     # scroll 10 times to get all friends on page
     for j in range(0, 10):
@@ -58,6 +69,9 @@ def getFriendsLikes(uname, email, passw, numFriendsToScrape, path):
 
     # get full HTML page of friends
     FULLHTMLPAGE = driver.page_source
+
+    # change directory back to the original so we can save friendsURLs page and likePages in the same directory as the project.
+    os.chdir(originalPath)
 
     # will parse the HTML page to obtain hrefs of friends.
     hrefs = parseHTML(FULLHTMLPAGE, "friendsurls", 1)
@@ -102,7 +116,7 @@ def parseHTML(HTMLPAGE, typeOfPage: str, friendNumber: int):
         # save the page to local storage for local parsing
         with open("friendListPage.html", "w", encoding='utf-8') as file:
             file.write(str(containers))
-        #lxml.html requires an actual html page to be passed so saving locally is required.
+        # lxml.html requires an actual html page to be passed so saving locally is required.
         tree = html.parse("friendListPage.html")
         html.tostring(tree)
         hrefs = tree.xpath('//@href')
@@ -111,6 +125,7 @@ def parseHTML(HTMLPAGE, typeOfPage: str, friendNumber: int):
     elif(typeOfPage == "friendslikes"):
         # d2edcug0 span contains the name of the liked page
         containers = page_soup.findAll("span", {"class": "d2edcug0"})
+        print(f"\n \n \n \n {containers} \n \n \n \n ")
         # save the page to local storage for local parsing
         with open(f"friendLikesPage{friendNumber}.html", "w", encoding='utf-8') as file:
             file.write(str(containers))
@@ -125,8 +140,8 @@ def parseHTML(HTMLPAGE, typeOfPage: str, friendNumber: int):
 def parseURLS(lst: list) -> list:
     newLst = []
     for link in lst:
-        #links that contain 'friends_mutual' in it include your friend's URLs, this is a good way to only select for friendsURLs...
-        #and discard any extra URLs.
+        # links that contain 'friends_mutual' in it include your friend's URLs, this is a good way to only select for friendsURLs...
+        # and discard any extra URLs.
         if"friends_mutual" in link:
             size = len(link)
             modString = link[:size - 14]
@@ -136,15 +151,17 @@ def parseURLS(lst: list) -> list:
     return newLst
 
 
-
 if __name__ == '__main__':
 
     email = secret.EMAIL
     uname = secret.UNAME
     passw = secret.passw
-    numOfFriendsToScrape = 1
-    windowsPath = secret.windowsPath
+    numOfFriendsToScrape = 2
+    #windowsPath = secret.windowsPath
     linuxPath = secret.linuxPath
     # gets friendsList page
-    getFriendsLikes(uname, email, passw, numOfFriendsToScrape, windowsPath)
+    #getFriendsLikes(uname, email, passw, numOfFriendsToScrape, windowsPath)
+    getFriendsLikes(uname, email, passw, numOfFriendsToScrape, linuxPath)
 
+    # print(email)
+    # print(passw)
