@@ -9,7 +9,6 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 from tbselenium.tbdriver import TorBrowserDriver
 from time import sleep
-from secretDirectory import secret
 
 website ="https://www.facebookcorewwwi.onion/"
 

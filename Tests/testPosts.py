@@ -6,7 +6,6 @@ sys.path.append(os.getcwd() + '/..')
 
 #import our file that has user login and the path to the tor and chrome drivers
 from secretDirectory import secret
-import config
 from post import post
 from main import loginToFacebook
 
