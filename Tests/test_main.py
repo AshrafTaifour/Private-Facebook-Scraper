@@ -26,12 +26,12 @@ class Test(TestCase):
 
     # uncomment this test if on Windows
     # to ensure the libraries are working.
-    # def test_windowsLogin(self, path=secret.windowsPath, email=secret.EMAIL, passw=secret.passw):
-    #     # for windows, uses chrome browser.
-    #     driver = loginToFacebook(path, email, passw)
+    def test_windowsLogin(self, path=secret.windowsPath, email=secret.EMAIL, passw=secret.passw):
+        # for windows, uses chrome browser.
+        driver = loginToFacebook(path, email, passw)
 
-    #     # assert if you're now on the homepage or if an 'incorrect password' error was thrown which would have a different URL
-    #     assert('https://www.facebook.com/' in driver.current_url)
+        # assert if you're now on the homepage or if an 'incorrect password' error was thrown which would have a different URL
+        assert('https://www.facebook.com/' in driver.current_url)
 
     # uncomment this test if on linux
     # check the README to ensure geckodriver is setup properly for this and that tor is installed using 'sudo apt install tor' for tbselenium
@@ -81,10 +81,10 @@ class Test(TestCase):
         assert(
             f"https://www.facebook.com/{uname}/friends_all" in yourFriendlistPage or f"https://www.facebookcorewwwi.onion/{uname}&sk=friends" in yourFriendlistPage)
 
-    #takes links that have friends_mutual in it and replaces it with likes_all so we can visit each friend's likes page
+    #takes links that have friends_mutual in it and replaces it with the link to their page
     def test_parseURLs(self):
         givenList = ['https://www.facebook.com/profile.php?id=100008186476906', 'https://www.facebook.com/ashraf.tayfour/friends_mutual', 'https://www.facebook.com/abdullah.arif115/friends_mutual', 'https://www.facebook.com/profile.php?id=100064037088173' ,'https://www.facebook.com/profile.php?id=100064037088173/friends_mutual']
-        expectedReturn = ['https://www.facebook.com/ashraf.tayfour/likes_all', 'https://www.facebook.com/abdullah.arif115/likes_all', 'https://www.facebook.com/profile.php?id=100064037088173/likes_all']
+        expectedReturn = ['https://www.facebook.com/ashraf.tayfour/', 'https://www.facebook.com/abdullah.arif115/', 'https://www.facebook.com/profile.php?id=100064037088173/']
 
         actualReturn = parseURLS(givenList)
 
@@ -94,7 +94,7 @@ class Test(TestCase):
     #will login and scrape the likes pages of the friends in this list and then save those like pages locally, this will check 
     def test_scrapeLikePages(self, path=secret.linuxPath, email=secret.EMAIL, passw=secret.passw, numFriendstoScrape = 2):
         driver = loginToFacebook(path, email, passw)
-        friendURLs = ['https://www.facebookcorewwwi.onion/abdullah.arif115/likes_all', 'https://www.facebookcorewwwi.onion/ashraf.tayfour/likes_all']
+        friendURLs = ['https://www.facebookcorewwwi.onion/abdullah.arif115/', 'https://www.facebookcorewwwi.onion/ashraf.tayfour/']
         scrapeLikePages(driver, friendURLs, numFriendstoScrape)
 
         result = True

@@ -124,7 +124,6 @@ def parseURLS(lst: list) -> list:
         if"friends_mutual" in link:
             size = len(link)
             modString = link[:size - 14]
-            modString += "likes_all"
             newLst.append(modString)
     return newLst
 
@@ -132,7 +131,8 @@ def parseURLS(lst: list) -> list:
 def scrapeLikePages(driver, friendURLs, numOfFriends):
     i = 0
     while(i < numOfFriends and i < len(friendURLs)):
-        driver.get(friendURLs[i])
+        friendLikesPage = friendURLs[i] + "likes_all"
+        driver.get(friendLikesPage)
         time.sleep(3)
         # scroll to get the entire 'likes' page
         for k in range(10):
