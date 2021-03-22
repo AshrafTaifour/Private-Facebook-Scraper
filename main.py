@@ -9,18 +9,8 @@ from secretDirectory import secret
 from tbselenium.tbdriver import TorBrowserDriver
 import os
 
-# username is name in url
 
-
-def getFriendsLikes(uname, email, passw, numFriendsToScrape, path):
-
-    # store original path of the directory (tor is changing the path when executing)
-    originalPath = os.getcwd()
-
-    # login, visit the facebook page and return the driver
-    driver = loginToFacebook(path, email, passw)
-    time.sleep(8)
-
+def getFriendsListHTMLPage(driver, uname):
     yourFriendlistPage = getFriendsListPage(uname)
 
     driver.get(yourFriendlistPage)
@@ -32,18 +22,12 @@ def getFriendsLikes(uname, email, passw, numFriendsToScrape, path):
         time.sleep(3)
 
     # get full HTML page of friends
-    FULLHTMLPAGE = driver.page_source
-
-    # change directory back to the original so we can save friendsURLs page and likePages in the same directory as the project.
-    os.chdir(originalPath)
-
-    # will parse the HTML page to obtain hrefs of friends.
-    friendURLS = parseHTML(FULLHTMLPAGE, "friendsurls", 1)
-
-    scrapeLikePages(driver, friendURLS, numFriendsToScrape)
+    return driver.page_source
 
 
 def loginToFacebook(exePath, useremail, userpass):
+    # store original path of the directory (tor is changing the path when executing)
+    originalPath = os.getcwd()
     if('chrome' in exePath):
         # will turn off notification for FB to allow webscraping for windows
         chrome_options = webdriver.ChromeOptions()
@@ -76,6 +60,8 @@ def loginToFacebook(exePath, useremail, userpass):
     # login button is targeted and clicked
     button = WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
         (By.CSS_SELECTOR, "button[type='submit']"))).click()
+    # change directory back to the original so we can save friendsURLs page and likePages in the same directory as the project.
+    os.chdir(originalPath)
 
     return driver
 
@@ -140,7 +126,6 @@ def parseURLS(lst: list) -> list:
             modString = link[:size - 14]
             modString += "likes_all"
             newLst.append(modString)
-
     return newLst
 
 
@@ -165,12 +150,22 @@ if __name__ == '__main__':
     email = secret.EMAIL
     uname = secret.UNAME
     passw = secret.passw
-    numOfFriendsToScrape = 3
+    numOfFriendsToScrape = 2
+
+    # login, visit the facebook page and return the driver
 
     # Windows Scraping
     # windowsPath = secret.windowsPath
-    # getFriendsLikes(uname, email, passw, numOfFriendsToScrape, windowsPath)
 
     # Linux Scraping
     linuxPath = secret.linuxPath
-    getFriendsLikes(uname, email, passw, numOfFriendsToScrape, linuxPath)
+
+    driver = loginToFacebook(linuxPath, email, passw)
+    time.sleep(8)
+
+    FULLHTMLPAGE = getFriendsListHTMLPage(driver, uname)
+
+    # will parse the HTML page to obtain hrefs of friends.
+    friendURLS = parseHTML(FULLHTMLPAGE, "friendsurls", 1)
+
+    scrapeLikePages(driver, friendURLS, numOfFriendsToScrape)
