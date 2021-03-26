@@ -5,7 +5,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup as soup
 import time
 from lxml import html  # to parse html
-from secretDirectory import secret
 from tbselenium.tbdriver import TorBrowserDriver
 import os
 
@@ -146,6 +145,8 @@ def scrapeLikePages(driver, friendURLs, numOfFriends):
 
 
 if __name__ == '__main__':
+    # import sensitive information if running locally 
+    from secretDirectory import secret
 
     email = secret.EMAIL
     uname = secret.UNAME
