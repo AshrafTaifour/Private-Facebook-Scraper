@@ -3,6 +3,7 @@ import setuptools
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+REQUIRED = ['beautifulsoup4', 'lxml', 'selenium', 'tbselenium']
 setuptools.setup(
     name="FacebookChatPhisher", 
     version="0.0.1",
@@ -17,5 +18,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=setuptools.find_packages(),
+    install_requires=REQUIRED,
     python_requires='>=3.7',
 )
