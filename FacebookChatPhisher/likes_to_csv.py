@@ -39,6 +39,3 @@ def write_to_csv(file_name, pages):
         writer = csv.writer(file)
         writer.writerows(pages)
 
-# Hardcoded file names for now
-pages = get_pages("likePage.html")
-write_to_csv('likePages.csv', pages)
