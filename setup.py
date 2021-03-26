@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="FacebookChat-Automated-Social-Media-Spear-Phisher", 
+    name="FacebookChatPhisher", 
     version="0.0.1",
     author="Ashraf Taifour, Abdullah Arif, Abdullah Chattha, Abdullah Chattha, Steve Pham",
     description="A bot to read and write to Facebook via selenium",
