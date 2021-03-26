@@ -10,7 +10,7 @@
     Dr. Sherif Saad Ahmed
 
 ## Adding packages
-	Don't forgot to `pip3 freeze > requirements.txt` - after installing packages in virtual environment
+	Don't forget to `pip3 freeze > requirements.txt` - after installing packages in virtual environment
 
 ## How to run
 Program has been tested on Linux
