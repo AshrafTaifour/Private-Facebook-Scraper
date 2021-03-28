@@ -34,8 +34,7 @@ def getChromeDriver(driver_path: str):
     return driver
 
 def getFirefoxDriver(driver_path: str):
-    service = webdriver.firefox.service.Service(driver_path)
-    driver = webdriver.Firefox(service=service)
+    driver = webdriver.Firefox(executable_path=driver_path)
     driver.get("http://www.facebook.com")
     return driver
 
