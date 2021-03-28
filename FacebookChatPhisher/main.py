@@ -4,13 +4,12 @@ from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup as soup
 import time
 from lxml import html  # to parse html
-from driver import getDriver, Browser
 import re
 
 def getWebsiteFromDriver(driver) ->str:
     m = re.search(r'(https://www\.facebookcorewwwi\.onion)|(https://www\.facebook\.com)', driver.current_url)
     return m.group(0)
-    
+
 def getFriendsListHTMLPage(driver, uname: str):
     website = getWebsiteFromDriver(driver)
     yourFriendlistPage = getFriendsListPage(uname, website)
@@ -127,12 +126,16 @@ def scrapeLikePages(driver, friendURLs, numOfFriends):
 if __name__ == '__main__':
     # import sensitive information if running locally 
     from secretDirectory import secret
+    # also get driver file to use 
+    from driver import getDriver, Browser
 
     email=secret.EMAIL
     passw=secret.passw
-    tor_path= secret.linuxPath
+    uname = secret.UNAME
+    tor_path=secret.linuxPath
+    driver_path=secret.windowsPath
     numOfFriendsToScrape = 2
-    driver = getDriver(driver_path, Browser.TOR, tor_path)
+    driver = getDriver(driver_path, Browser.FIREFOX, tor_path)
 
     loginToFacebook(driver, email, passw)
     time.sleep(8)
