@@ -1,17 +1,19 @@
-from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup as soup
 import time
 from lxml import html  # to parse html
-from tbselenium.tbdriver import TorBrowserDriver
-import os
+from driver import getDriver, Browser
+import re
 
-
-def getFriendsListHTMLPage(driver, uname):
-    yourFriendlistPage = getFriendsListPage(uname)
-
+def getWebsiteFromDriver(driver) ->str:
+    m = re.search(r'(https://www\.facebookcorewwwi\.onion)|(https://www\.facebook\.com)', driver.current_url)
+    return m.group(0)
+    
+def getFriendsListHTMLPage(driver, uname: str):
+    website = getWebsiteFromDriver(driver)
+    yourFriendlistPage = getFriendsListPage(uname, website)
     driver.get(yourFriendlistPage)
 
     # scroll 10 times to get all friends on page
@@ -24,26 +26,8 @@ def getFriendsListHTMLPage(driver, uname):
     return driver.page_source
 
 
-def loginToFacebook(exePath, useremail, userpass):
-    # store original path of the directory (tor is changing the path when executing)
-    originalPath = os.getcwd()
-    if('chrome' in exePath):
-        # will turn off notification for FB to allow webscraping for windows
-        chrome_options = webdriver.ChromeOptions()
-        prefs = {"profile.default_content_setting_values.notifications": 2}
-        chrome_options.add_experimental_option("prefs", prefs)
-        driver = webdriver.Chrome(exePath, options=chrome_options)
-        # will open the webpage
-        driver.get("http://www.facebook.com")
-    elif('tor' in exePath):
-        # for linux, uses tor browser.
-        driver = TorBrowserDriver(exePath)
-        # will open the webpage
-        driver.get("https://www.facebookcorewwwi.onion/")
-    else:
-        print(f"'tor' or 'chrome' are not in your path's name, please change the name of your chrome driver to include the word chrome in it or the tor directory to include the word tor.")
-        return
 
+def loginToFacebook(driver, useremail: str, userpass: str):
     # targets username and password boxes
     usernameBox = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='email']")))
@@ -60,20 +44,16 @@ def loginToFacebook(exePath, useremail, userpass):
     button = WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
         (By.CSS_SELECTOR, "button[type='submit']"))).click()
     # change directory back to the original so we can save friendsURLs page and likePages in the same directory as the project.
-    os.chdir(originalPath)
 
-    return driver
 
 # will return the URL of the user's friends list page based on whether they have a user name or not
-
-
-def getFriendsListPage(uname):
+def getFriendsListPage(uname: str, website: str):
     # if account has no real username
     retStr = ""
     if 'profile.php?' in uname:
-        retStr = f'https://www.facebookcorewwwi.onion/{uname}&sk=friends'
+        retStr = f'{website}/{uname}&sk=friends'
     else:
-        retStr = f"https://www.facebook.com/{uname}/friends_all"
+        retStr = f"{website}/{uname}/friends_all"
 
     return retStr
 
@@ -148,20 +128,13 @@ if __name__ == '__main__':
     # import sensitive information if running locally 
     from secretDirectory import secret
 
-    email = secret.EMAIL
-    uname = secret.UNAME
-    passw = secret.passw
+    email=secret.EMAIL
+    passw=secret.passw
+    tor_path= secret.linuxPath
     numOfFriendsToScrape = 2
+    driver = getDriver(driver_path, Browser.TOR, tor_path)
 
-    # login, visit the facebook page and return the driver
-
-    # Windows Scraping
-    # windowsPath = secret.windowsPath
-
-    # Linux Scraping
-    linuxPath = secret.linuxPath
-
-    driver = loginToFacebook(linuxPath, email, passw)
+    loginToFacebook(driver, email, passw)
     time.sleep(8)
 
     FULLHTMLPAGE = getFriendsListHTMLPage(driver, uname)
