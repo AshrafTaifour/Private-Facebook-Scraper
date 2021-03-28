@@ -12,8 +12,18 @@ class Browser(Enum):
     OPERA = 6
     SAFARI = 7
 
+SUPPORTED_BROWSER = {
+    "Tor": Browser.TOR,
+    "Chrome": Browser.CHROME,
+    "Firefox": Browser.FIREFOX,
+    "Edge": Browser.EDGE,
+    "Internet Explorer": Browser.INTERNET_EXPLORER,
+    "Opera": Browser.OPERA,
+    "Safari": Browser.SAFARI,
+}
+
 def getSupportedBrowser():
-    return ["Tor", "Chrome", "Firefox", "Edge", "Internet Explorer", "Opera", "Safari"]
+    return list(SUPPORTED_BROWSER.keys())
 
 def invalidDriver(_):
     raise ValueError("Invalid Browser type selected")
