@@ -1,4 +1,3 @@
-
 import os
 import time
 import codecs
@@ -11,16 +10,22 @@ from bs4 import BeautifulSoup as soup
 from lxml import html  # to parse html
 from tbselenium.tbdriver import TorBrowserDriver
 import sys
-# hacky fix to get parent directory
+# super hacky fix to get parent directory by adding it to PATH
+sys.path.append(os.getcwd())
 sys.path.append(os.getcwd() + '/..')
 from main import loginToFacebook, getFriendsListPage, parseHTML, parseURLS, scrapeLikePages
 from driver import * 
 from secretDirectory import secret
 
-# Tests that should work on the clear-net browser
+'''NOTE: behavior is different for terminal execution and VSCODE execution; 
+VSCODE runs tests from ~/Desktop/4990/fbscrapeandlogin/fbLoginAndScrape/FacebookChatPhisher$ directory
+while Terminal will run tests from ~/Desktop/4990/fbscrapeandlogin/fbLoginAndScrape/FacebookChatPhisher/Tests$ directory
+this means that whenever we use codecs.open() for onionTestfiles an error may be raised based on which program executes the program
+'''
+#Tests that should work on the clear-net browser (anything but Tor)
 class ClearNetTest(unittest.TestCase):
     def setUp(self):
-        driver_path=secret.windowsPath
+        driver_path=secret.exePath
         email=secret.EMAIL
         passw=secret.passw
         browser_mode = guessBrowserFromPath(driver_path)
@@ -43,12 +48,13 @@ class ClearNetTest(unittest.TestCase):
                f"{website}/{uname}/friends_all" in yourFriendlistPage
                )
 
+# Tests that should work on Tor browser
 class DarkWebTest(unittest.TestCase):
     def setUp(self):
-        driver_path=secret.windowsPath
+        driver_path=secret.exePath
         email=secret.EMAIL
         passw=secret.passw
-        tor_path= secret.linuxPath
+        tor_path= secret.torBrowserPath
         self.driver = getDriver(driver_path, Browser.TOR, tor_path)
         loginToFacebook(self.driver, email, passw)
 
