@@ -3,6 +3,9 @@ from tbselenium.tbdriver import TorBrowserDriver
 from enum import Enum
 from functools import partial
 from os import getcwd, chdir
+
+#this class adds support functionality for all browsers
+
 class Browser(Enum):
     TOR  = 1
     CHROME = 2
@@ -22,10 +25,12 @@ SUPPORTED_BROWSER = {
     "Safari": Browser.SAFARI,
 }
 
+#gets list of supported browsers
 def getSupportedBrowser():
     return list(SUPPORTED_BROWSER.keys())
 
-def invalidDriver(_):
+#raise an exception if browser isn't supported
+def invalidDriver(_ = ""):
     raise ValueError("Invalid Browser type selected")
 
 # Tor is the only one that needs explicit access to the browser folder. We assume the driver is in $PATH
@@ -84,10 +89,18 @@ def guessBrowserFromPath(driver_path: str)-> Browser:
         browser_mode = Browser.INTERNET_EXPLORER
     elif 'operachromiumdriver' in driver_path:
         browser_mode = Browser.OPERA
-    else: # safari support built in we don't need a path
+    elif 'safaridriver' in driver_path: # safari support built in we don't need a path
         browser_mode = Browser.SAFARI
+    else:
+        invalidDriver()
     return browser_mode
 
+#will obtain and return a driver based on the arguments given
+'''
+driver_path is the path to the selenium driver 
+mode selects what browser you're looking for and match it to the browser class.
+tor_installation_path looks for tor brower's path, it will be blank by default in case other browsers are used
+ '''
 def getDriver(driver_path: str, mode: Browser, tor_installation_path=''):
     driver_selector = {
         Browser.TOR: partial(getTorDriver, tor_installation_path),

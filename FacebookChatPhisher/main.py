@@ -40,7 +40,7 @@ def loginToFacebook(driver, useremail: str, userpass: str):
     passwordBox.send_keys(userpass)
 
     # login button is targeted and clicked
-    button = WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
+    WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
         (By.CSS_SELECTOR, "button[type='submit']"))).click()
     # change directory back to the original so we can save friendsURLs page and likePages in the same directory as the project.
 
@@ -132,10 +132,10 @@ if __name__ == '__main__':
     email=secret.EMAIL
     passw=secret.passw
     uname = secret.UNAME
-    tor_path=secret.linuxPath
-    driver_path=secret.windowsPath
+    tor_path=secret.torBrowserPath
+    driver_path=secret.exePath
     numOfFriendsToScrape = 2
-    driver = getDriver(driver_path, Browser.FIREFOX, tor_path)
+    driver = getDriver(driver_path, Browser.TOR, tor_path)
 
     loginToFacebook(driver, email, passw)
     time.sleep(8)
