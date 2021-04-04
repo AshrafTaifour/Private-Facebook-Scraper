@@ -13,7 +13,9 @@ import sys
 # super hacky fix to get parent directory by adding it to PATH
 sys.path.append(os.getcwd())
 sys.path.append(os.getcwd() + '/..')
-from main import loginToFacebook, getFriendsListPage, parseHTML, parseURLS, scrapeLikePages
+from main import loginToFacebook, scrapeLikePages
+from friendListRetriever import getFriendsListPage
+from htmlParsers import parseFriendsPage, parseLikesPage, parseURLS
 from driver import * 
 from secretDirectory import secret
 
@@ -75,30 +77,31 @@ class DarkWebTest(unittest.TestCase):
     #will login and scrape the likes pages of the friends in this list and then save those like pages locally, this will check 
     def test_scrapeLikePages(self, numFriendstoScrape = 2):
         friendURLs = ['https://www.facebookcorewwwi.onion/abdullah.arif115/', 'https://www.facebookcorewwwi.onion/ashraf.tayfour/']
-        scrapeLikePages(self.driver, friendURLs, numFriendstoScrape)
+        scrapeLikePages(self.driver, friendURLs, numFriendstoScrape, getcwd())
         result = True
 
         try:
             with codecs.open("friendLikesPage0.html") as f:
                 pass
         except IOError:
-            result = False
+            result &= False
 
         try:
             with codecs.open("friendLikesPage1.html") as f:
                 pass
         except IOError:
-            result = False
+            result &= False
+        # Ensure both friends page exist 
         assert(result)
     
 
 class HTMLProcessingTest(unittest.TestCase):
     # please setup secret.testFriendsURLsPage to a the downloaded HTML source of your own "friends list" page that shows all your friends on Facebook
     # here we are testing ParseHTMLs ability to parse full source HTML page and it returning hrefs that can be used to find friendsURLs
-    def test_parse_html_friendsURLs(self, type_of_page="friendsurls", friendNumber=None):
+    def test_parse_html_friendsURLs(self):
         with codecs.open("testURLsPageOnion.html", "r", 'utf-8') as friendsURLsPage:
             result = True
-            allHrefs = parseHTML(friendsURLsPage, type_of_page, friendNumber)
+            allHrefs = parseFriendsPage(friendsURLsPage)
             for link in allHrefs:
                 if 'https://www.facebook.com/' not in link and 'https://www.facebookcorewwwi.onion/' not in link:
                     print(result)
@@ -106,12 +109,12 @@ class HTMLProcessingTest(unittest.TestCase):
 
         assert(result)
 
-    def test_parse_html_friendsLikes(self, type_of_page="friendslikes", friendNumber=7357):
+    def test_parse_html_friendsLikes(self, friendNumber=7357):
         # 7357 means test, this testfunction will take in raw HTML of likesPage and should output an html file named friendLikesPage7357.html that will include the
         # names of the liked pages and the interest category of that liked page
         with codecs.open("testLikesPage1Onion.html", "r", 'utf-8') as friendsLikesPage:
             result = True
-            parseHTML(friendsLikesPage, type_of_page, friendNumber)
+            parseLikesPage(friendsLikesPage, friendNumber, os.getcwd())
 
         try:
             with codecs.open("friendLikesPage7357.html") as f:
