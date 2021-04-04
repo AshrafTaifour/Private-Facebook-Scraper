@@ -1,4 +1,7 @@
-from seleniumUtil import scrollToBottomOfPage
+try:
+    from .seleniumUtil import scrollToBottomOfPage
+except (ImportError, ModuleNotFoundError) as e:
+    from seleniumUtil import scrollToBottomOfPage
 import re
 
 # Get the Facebook portal that we are using

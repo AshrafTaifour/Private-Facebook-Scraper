@@ -2,9 +2,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 import time
-from friendListRetriever import getFriendsListHTMLPage
-from seleniumUtil import scrollToBottomOfPage
-from htmlParsers import parseFriendsPage, parseLikesPage
+# This should be setup to just use the relative import but that would it stop it from working locally...
+try:
+    from .friendListRetriever import getFriendsListHTMLPage
+    from .seleniumUtil import scrollToBottomOfPage
+    from .htmlParsers import parseFriendsPage, parseLikesPage
+except (ImportError, ModuleNotFoundError) as e:
+    from friendListRetriever import getFriendsListHTMLPage
+    from seleniumUtil import scrollToBottomOfPage
+    from htmlParsers import parseFriendsPage, parseLikesPage
 
 def loginToFacebook(driver, useremail: str, userpass: str):
     # targets username and password boxes
