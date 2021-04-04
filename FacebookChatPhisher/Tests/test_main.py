@@ -77,7 +77,7 @@ class DarkWebTest(unittest.TestCase):
     #will login and scrape the likes pages of the friends in this list and then save those like pages locally, this will check 
     def test_scrapeLikePages(self, numFriendstoScrape = 2):
         friendURLs = ['https://www.facebookcorewwwi.onion/abdullah.arif115/', 'https://www.facebookcorewwwi.onion/ashraf.tayfour/']
-        scrapeLikePages(self.driver, friendURLs, numFriendstoScrape, getcwd())
+        scrapeLikePages(self.driver, friendURLs, numFriendstoScrape, os.getcwd())
         result = True
 
         try:
