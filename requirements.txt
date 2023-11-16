@@ -1,4 +1,4 @@
 beautifulsoup4==4.9.3
 lxml>=4.6.3
-selenium==4.0.0a1
+selenium==4.15.1
 tbselenium==0.5.3
